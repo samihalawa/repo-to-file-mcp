@@ -1,0 +1,26 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      token_count_encoding:
+        type: string
+        description: "Token count encoding used by tiktoken (e.g., 'o200k_base' for GPT-4o)"
+        default: "o200k_base"
+      security_check:
+        type: boolean
+        description: "Whether to perform security checks on files"
+        default: true
+  commandFunction: |-
+    (config) => ({
+      command: 'node',
+      args: ['dist/index.js'],
+      env: {
+        TOKEN_COUNT_ENCODING: config.token_count_encoding,
+        SECURITY_CHECK: String(config.security_check)
+      }
+    })
+build:
+  dockerfile: Dockerfile.mcp
+  dockerBuildPath: .
